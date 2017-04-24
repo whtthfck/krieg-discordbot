@@ -1,0 +1,49 @@
+{
+    "rssfeeds": [
+        {
+            "prefix": "LoL: ",
+            "rssurl": "http://na.leagueoflegends.com/en/rss.xml",
+            "datefield": "pubDate",
+            "categories": [
+                {
+                    "id": "championrelease",
+                    "match": "link",
+                    "regexstr": ".*/champion-release/",
+                    "date": "Wed Apr 19 2017 01:43:16 GMT+0200 (Mitteleuropäische Sommerzeit)"
+                },
+                {
+                    "id": "patchnotes",
+                    "match": "link",
+                    "regexstr": ".*/patch/.*-notes",
+                    "date": "Mon Apr 17 2017 23:24:58 GMT+0200 (Mitteleuropäische Sommerzeit)"
+                }
+            ]
+        },
+        {
+            "prefix": "",
+            "rssurl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC2t5bjwHdUX4vM2g8TRDq5g",
+            "datefield": "pubDate",
+            "categories": [
+                {
+                    "id": "spotlight",
+                    "match": "title",
+                    "regexstr": ".*Champion Spotlight",
+                    "date": "Mon Apr 17 2017 23:00:00 GMT+0200 (Mitteleuropäische Sommerzeit)"
+                }
+            ]
+        },
+        {
+            "prefix": "H1Z1: ",
+            "rssurl": "http://steamcommunity.com/games/433850/rss/",
+            "datefield": "pubDate",
+            "categories": [
+                {
+                    "id": "h1z1update",
+                    "match": "title",
+                    "regexstr": "Game Update",
+                    "date": "Thu Apr 20 2017 05:17:47 GMT+0200 (Mitteleuropäische Sommerzeit)"
+                }
+            ]
+        }
+    ]
+}
