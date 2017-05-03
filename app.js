@@ -30,6 +30,12 @@ var request = require('request')
 
 const fs = require('fs');
 
+var slowmode = false;
+var slowmodetimeout = 30;
+var slowmodeusers = [];
+
+function isNumber(obj) { return !isNaN(parseFloat(obj)) }
+
 function parserssby(json){
     console.log("Loading rss news...");
     var data = fs.readFileSync(json, 'utf8');
@@ -118,26 +124,69 @@ bot.on('ready', () => {
 
 
 bot.on('message', message => {
-    if(!message.content.startsWith(config.prefix)) return;
+    if(message.content.startsWith(config.prefix)){
     
-    let command = message.content.split(" ")[0].slice(config.prefix.length);
+        let command = message.content.split(" ")[0].slice(config.prefix.length);
+        let args = message.content.slice(command.length+2);
+
+        if (command === 'ping') {
+            message.reply('pong');
+        }else if (command === 'slowmode'){
+            let adminRole = message.guild.roles.find("name", "admin");
+            if(message.member.roles.has(adminRole.id)){
+                if(args === 'off'){
+                    slowmode = false;
+                    slowmodeusers = [];
+                    console.log("Slowmode turned off.");
+                }else{
+                    slowmode = true;
+                    if(isNumber(args)){
+                        slowmodetimeout = parseFloat(args);
+                    }else{
+                        slowmodetimeout = 30;
+                    }
+                    console.log("Slowmode "+ slowmodetimeout +" turned on.");
+                }
+            }else{
+                message.reply("You don't have the permission to execute this command.");
+            }
+        }else if (command === 'raul'){
+            message.channel.sendMessage(`Origin of RAUL: https://oddshot.tv/s/6QQLeu`);
+        }/*else if (command === 'french'){
+            translate(args, {to: 'fr'}).then(res => {
+                message.reply(res.text);
+            }).catch(err => {
+                console.error(err);
+            });
+        }else if (command === 'english'){
+            translate(args, {to: 'en'}).then(res => {
+            message.reply(res.text);
+            }).catch(err => {
+                console.error(err);
+            });
+        }
+        */
+    }
     
-    if (command === 'ping') {
-        message.reply('pong');
-    }else if (command === 'raul'){
-        message.channel.sendMessage(`Origin of RAUL: https://oddshot.tv/s/6QQLeu`);
-    }else if (command === 'french'){
-	translate(message.content.slice(command.length+1), {to: 'fr'}).then(res => {
-	    message.reply(res.text);
-	}).catch(err => {
-	    console.error(err);
-	});
-    }else if (command === 'english'){
-        translate(message.content.slice(command.length+1), {to: 'en'}).then(res => {
-	    message.reply(res.text);
-    	}).catch(err => {
-    	    console.error(err);
-    	});
+    if(slowmode){
+        var author = slowmodeusers.find(function(pair){return pair.id === message.author.id;});
+        if(author){
+            if(author.date > new Date(new Date()-1000*slowmodetimeout)){
+                message.author.sendMessage("You are in slowmode! Wait "+Math.floor((author.date - new Date(new Date()-1000*slowmodetimeout))/1000)+" more seconds.");
+                message.delete();
+            }else{
+            author.date = new Date();
+            }
+        }else{
+            let adminRole = message.guild.roles.find("name", "admin");
+            if(!message.member.roles.has(adminRole.id)){
+                var pair = {
+                    id: message.author.id,
+                    date: new Date()
+                };
+                slowmodeusers.push(pair);
+            }
+        }
     }
 });
 
