@@ -24,7 +24,7 @@ var express = require('express');
 
 const config = require("./config.json");
 const bot = new Discord.Client();
-
+const translate = require('google-translate-api');
 var request = require('request')
   , FeedParser = require('feedparser');
 
@@ -126,6 +126,18 @@ bot.on('message', message => {
         message.reply('pong');
     }else if (command === 'raul'){
         message.channel.sendMessage(`Origin of RAUL: https://oddshot.tv/s/6QQLeu`);
+    }else if (command === 'french'){
+	translate(message.content.slice(command.length+1), {to: 'fr'}).then(res => {
+	    message.reply(res.text);
+	}).catch(err => {
+	    console.error(err);
+	});
+    }else if (command === 'english'){
+        translate(message.content.slice(command.length+1), {to: 'en'}).then(res => {
+	    message.reply(res.text);
+    	}).catch(err => {
+    	    console.error(err);
+    	});
     }
 });
 

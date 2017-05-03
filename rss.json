@@ -15,7 +15,7 @@
                     "id": "patchnotes",
                     "match": "link",
                     "regexstr": ".*/patch/.*-notes",
-                    "date": "Mon Apr 17 2017 23:24:58 GMT+0200 (Mitteleuropäische Sommerzeit)"
+                    "date": "Tue May 02 2017 03:51:32 GMT+0200 (CEST)"
                 }
             ]
         },
