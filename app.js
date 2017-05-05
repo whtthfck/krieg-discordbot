@@ -36,6 +36,14 @@ var slowmodeusers = [];
 
 function isNumber(obj) { return !isNaN(parseFloat(obj)) }
 
+function pluck(array){
+    return array.map(function(item){ return item["name"];});
+}
+
+function hasRole(mem, role){
+    return pluck(mem.roles).includes(role);
+}
+
 function parserssby(json){
     console.log("Loading rss news...");
     var data = fs.readFileSync(json, 'utf8');
@@ -124,6 +132,7 @@ bot.on('ready', () => {
 
 
 bot.on('message', message => {
+    if(message.author.bot) return;
     if(message.content.startsWith(config.prefix)){
     
         let command = message.content.split(" ")[0].slice(config.prefix.length);
@@ -132,8 +141,7 @@ bot.on('message', message => {
         if (command === 'ping') {
             message.reply('pong');
         }else if (command === 'slowmode'){
-            let adminRole = message.guild.roles.find("name", "admin");
-            if(message.member.roles.has(adminRole.id)){
+            if(hasRole(message.member, "admin")){
                 if(args === 'off'){
                     slowmode = false;
                     slowmodeusers = [];
@@ -146,13 +154,14 @@ bot.on('message', message => {
                         slowmodetimeout = 30;
                     }
                     console.log("Slowmode "+ slowmodetimeout +" turned on.");
+                    message.channel.sendMessage("Calm down now. This server is now in slowmode.");
                 }
             }else{
-                message.reply("You don't have the permission to execute this command.");
+                message.member.reply("You don't have the permission to execute this command.");
             }
         }else if (command === 'raul'){
             message.channel.sendMessage(`Origin of RAUL: https://oddshot.tv/s/6QQLeu`);
-        }/*else if (command === 'french'){
+        }else if (command === 'french'){
             translate(args, {to: 'fr'}).then(res => {
                 message.reply(res.text);
             }).catch(err => {
@@ -165,7 +174,7 @@ bot.on('message', message => {
                 console.error(err);
             });
         }
-        */
+        
     }
     
     if(slowmode){
@@ -178,8 +187,7 @@ bot.on('message', message => {
             author.date = new Date();
             }
         }else{
-            let adminRole = message.guild.roles.find("name", "admin");
-            if(!message.member.roles.has(adminRole.id)){
+            if(!hasRole(message.member, "admin")){
                 var pair = {
                     id: message.author.id,
                     date: new Date()
