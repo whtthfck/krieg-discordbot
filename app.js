@@ -161,6 +161,9 @@ bot.on('message', message => {
             }
         }else if (command === 'raul'){
             message.channel.sendMessage(`Origin of RAUL: https://oddshot.tv/s/6QQLeu`);
+        }else if(command === 'wowhead'){
+            let url = "http://wowhead.com/item="+args;
+            message.reply(url);
         }else if (command === 'french'){
             translate(args, {to: 'fr'}).then(res => {
                 message.reply(res.text);
